@@ -9,6 +9,6 @@ this, in rust (never done that before, so this might be a mess)
 
 ##### todo
 
-[-] Basic Rendering of Elliptic curve
-[ ] Change Rendering to SVG format
-[ ] include egpui.rs and allow interative realtime change of a, b and zoom (gl)
+- [x] Basic Rendering of Elliptic curve
+- [ ] Change Rendering to SVG format
+- [ ] include egpui.rs and allow interative realtime change of a, b and zoom (gl)
