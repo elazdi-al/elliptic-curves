@@ -5,7 +5,7 @@ this, in rust (never done that before, so this might be a mess)
 
 ## Current State
 
-![Current State](curr_state.png "Current State")
+![Current State](images/curr_state.png "Current State")
 
 ##### todo
 
