@@ -3,6 +3,10 @@
 was working on algebra and elliptic curves intrigued me so i decided to try and render them.
 this, in rust (never done that before, so this might be a mess)
 
+## Current State
+
+![Current State](curr_state.png "Current State")
+
 ##### todo
 
 [-] Basic Rendering of Elliptic curve
