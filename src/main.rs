@@ -19,7 +19,7 @@ fn elliptic(x: f32) -> Option<f32> {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let root = BitMapBackend::new("plot/0.png", (1280, 960)).into_drawing_area();
+    let root = SVGBackend::new("plot/0.svg", (1280, 960)).into_drawing_area();
     root.fill(&WHITE)?;
     let mut chart = ChartBuilder::on(&root)
         .caption(
