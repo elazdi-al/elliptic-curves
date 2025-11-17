@@ -1,8 +1,8 @@
-use plotters::prelude::*;
-use std::ops::RangeInclusive;
+use gpui::{
+    div, prelude::*, px, rgb, size, App, Application, Bounds, Context, SharedString, Window,
+    WindowBounds, WindowOptions,
+};
 
-// condition equation must satisfy discriminant != 0 to avoid self-intersections
-// (https://en.wikipedia.org/wiki/Elliptic_curve)
 const A: f32 = -1.0;
 const B: f32 = 1.0;
 
@@ -17,34 +17,54 @@ fn elliptic(x: f32) -> Option<f32> {
         None
     }
 }
+struct EllipticCurves {
+    text: SharedString,
+}
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let root = SVGBackend::new("plot/0.svg", (1280, 960)).into_drawing_area();
-    root.fill(&WHITE)?;
-    let mut chart = ChartBuilder::on(&root)
-        .caption(
-            format!("y^2=x^3 + ax + b, a = {}, b = {}", A, B),
-            ("sans-serif", 32).into_font(),
+impl Render for EllipticCurves {
+    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
+        div()
+            .flex()
+            .flex_col()
+            .gap_3()
+            .bg(rgb(0x505050))
+            .size(px(500.0))
+            .justify_center()
+            .items_center()
+            .shadow_lg()
+            .border_1()
+            .border_color(rgb(0x0000ff))
+            .text_xl()
+            .text_color(rgb(0xffffff))
+            .child(format!("Hello, {}!", &self.text))
+            .child(
+                div()
+                    .flex()
+                    .gap_2()
+                    .child(div().size_8().bg(gpui::red()))
+                    .child(div().size_8().bg(gpui::green()))
+                    .child(div().size_8().bg(gpui::blue()))
+                    .child(div().size_8().bg(gpui::yellow()))
+                    .child(div().size_8().bg(gpui::black()))
+                    .child(div().size_8().bg(gpui::white())),
+            )
+    }
+}
+
+fn main() {
+    Application::new().run(|cx: &mut App| {
+        let bounds = Bounds::centered(None, size(px(500.), px(500.0)), cx);
+        cx.open_window(
+            WindowOptions {
+                window_bounds: Some(WindowBounds::Windowed(bounds)),
+                ..Default::default()
+            },
+            |_, cx| {
+                cx.new(|_| EllipticCurves {
+                    text: "World".into(),
+                })
+            },
         )
-        .margin(7)
-        .x_label_area_size(30)
-        .y_label_area_size(30)
-        .build_cartesian_2d(-REVERSE_ZOOM..REVERSE_ZOOM, -REVERSE_ZOOM..REVERSE_ZOOM)?;
-
-    let points: Vec<f32> = RangeInclusive::new(-RANGE as i32, RANGE as i32)
-        .map(|x| x as f32 * REVERSE_ZOOM / RANGE)
-        .collect();
-
-    chart.draw_series(LineSeries::new(
-        points.iter().filter_map(|&x| elliptic(x).map(|y| (x, y))),
-        &RED,
-    ))?;
-
-    chart.draw_series(LineSeries::new(
-        points.iter().filter_map(|&x| elliptic(x).map(|y| (x, -y))),
-        &RED,
-    ))?;
-    chart.configure_mesh().draw()?;
-    root.present()?;
-    Ok(())
+        .unwrap();
+    });
 }
